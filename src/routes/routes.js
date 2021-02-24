@@ -26,6 +26,22 @@ const routes = [
         path: '/profile',
         name: 'profile',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/UserProfile.vue')
+      },
+      /*ADMIN*/
+      {
+        path: '/clientes',
+        name: 'clientes',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/Admin/Clientes.vue')
+      },
+      {
+        path: '/sucursales',
+        name: 'sucursales',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/Admin/Sucursales.vue')
+      },
+      {
+        path: '/dispositivos',
+        name: 'dispositivos',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/Admin/Dispositivos.vue')
       }
 
     ]

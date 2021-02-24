@@ -29,6 +29,7 @@
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-clipboard2": "^0.3.0",
+    "vue-colour-picker": "^0.0.5",
     "vue-flatpickr-component": "^8.1.2",
     "vue-router": "^3.0.6",
     "vue2-transitions": "^0.2.3"
