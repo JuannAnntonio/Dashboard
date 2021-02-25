@@ -7,15 +7,15 @@
           :link="{
             name: 'Dashboard',
             path: '/dashboard',
-            icon: 'ni ni-tv-2 ' // text-primary- ni ni-personal_video
+            icon: 'fa fa-chart-pie' // text-primary- ni ni-personal_video
           }"
         >
         </sidebar-item>
 
         <sidebar-item
           :link="{
-            name: 'Reporte',
-            path: '/tables',
+            name: 'Datos',
+            path: '/datos',
             icon: 'ni ni-bullet-list-67'
           }"
         >
@@ -24,17 +24,8 @@
         <sidebar-item
           :link="{
             name: 'Administración',
-            path: '/profile',
-            icon: 'ni ni-settings' //ni ni-single-02 text-yellow
-          }"
-        >
-        </sidebar-item>
-
-        <sidebar-item
-          :link="{
-            name: 'Tiempo en espera',
-            path: '/register',
-            icon: 'ni ni-circle-08'
+            path: '/administracion',
+            icon: 'fa fa-users-cog'
           }"
         >
         </sidebar-item>
