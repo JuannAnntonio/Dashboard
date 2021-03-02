@@ -58,12 +58,12 @@ function chartOptions() {
         },
         elements: {
           point: {
-            radius: 0,
+            radius: 5,
             backgroundColor: colors.theme['primary']
           },
           line: {
             tension: .4,
-            borderWidth: 4,
+            borderWidth: 2,
             borderColor: colors.theme['primary'],
             backgroundColor: colors.transparent,
             borderCapStyle: 'rounded'

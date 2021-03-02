@@ -1,166 +1,184 @@
 <template>
-  <div>
-
-    <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
-      <!-- Card stats -->
-      <b-row>
-        <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
-                      type="gradient-red"
-                      sub-title="350,897"
-                      icon="ni ni-active-40"
-                      class="mb-4">
-
-            <template slot="footer">
-              <span class="text-success mr-2">3.48%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Total traffic"
-                      type="gradient-orange"
-                      sub-title="2,356"
-                      icon="ni ni-chart-pie-35"
-                      class="mb-4">
-
-            <template slot="footer">
-              <span class="text-success mr-2">12.18%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Sales"
-                      type="gradient-green"
-                      sub-title="924"
-                      icon="ni ni-money-coins"
-                      class="mb-4">
-
-            <template slot="footer">
-              <span class="text-danger mr-2">5.72%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
-
-        </b-col>
-        <b-col xl="3" md="6">
-          <stats-card title="Performance"
-                      type="gradient-info"
-                      sub-title="49,65%"
-                      icon="ni ni-chart-bar-32"
-                      class="mb-4">
-
-            <template slot="footer">
-              <span class="text-success mr-2">54.8%</span>
-              <span class="text-nowrap">Since last month</span>
-            </template>
-          </stats-card>
-        </b-col>
-      </b-row>
-    </base-header>
-
-    <!--Charts-->
-    <b-container fluid class="mt--7">
-      <b-row>
-        <b-col xl="8" class="mb-5 mb-xl-0">
-          <card type="default" header-classes="bg-transparent">
-            <b-row align-v="center" slot="header">
-              <b-col>
-                <h6 class="text-light text-uppercase ls-1 mb-1">Overview</h6>
-                <h5 class="h3 text-white mb-0">Sales value</h5>
-              </b-col>
-              <b-col>
-                <b-nav class="nav-pills justify-content-end">
-                  <b-nav-item
-                       class="mr-2 mr-md-0"
-                       :active="bigLineChart.activeIndex === 0"
-                       link-classes="py-2 px-3"
-                       @click.prevent="initBigChart(0)">
-                      <span class="d-none d-md-block">Month</span>
-                      <span class="d-md-none">M</span>
-                  </b-nav-item>
-                  <b-nav-item
-                    link-classes="py-2 px-3"
-                    :active="bigLineChart.activeIndex === 1"
-                    @click.prevent="initBigChart(1)"
-                  >
-                    <span class="d-none d-md-block">Week</span>
-                    <span class="d-md-none">W</span>
-                  </b-nav-item>
-                </b-nav>
-              </b-col>
-            </b-row>
-            <line-chart
-              :height="350"
-              ref="bigChart"
-              :chart-data="bigLineChart.chartData"
-              :extra-options="bigLineChart.extraOptions"
+  <b-container class="pb-6 pt-6  d-flex">
+    <b-card no-body>
+      <b-card-header class="border-0">
+        <div class="row justify-content-start">
+          <div class="col">
+            <stats-card
+              title="Sucursal"
+              type="gradient-info"
+              :sub-title="sucursal.nombre"
+              class="mb-2"
             >
-            </line-chart>
-          </card>
-        </b-col>
+              <template slot="footer">
 
-        <b-col xl="4" class="mb-5 mb-xl-0">
-          <card header-classes="bg-transparent">
-            <b-row align-v="center" slot="header">
-              <b-col>
-                <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
-                <h5 class="h3 mb-0">Total orders</h5>
-              </b-col>
-            </b-row>
-
-            <bar-chart
-              :height="350"
-              ref="barChart"
-              :chart-data="redBarChart.chartData"
+              </template>
+            </stats-card>
+          </div>
+          <div class="col">
+            <stats-card
+              title="Aforo actual"
+              type="gradient-info"
+              :sub-title="porcentajeAforo"
+              icon="ni ni-chart-bar-32"
+              class="mb-2"
             >
-            </bar-chart>
-          </card>
-        </b-col>
-      </b-row>
-      <!-- End charts-->
+              <template slot="footer">
+                <base-progress type="primary" :height="8" :value="porcentajeAforo" />
+                <br />
+                Aforo máximo:
+                <span class="text-success">{{ sucursal.aforoMax }}</span>
+                <br />
+                Aforo actual:
+                <span class="text-success">{{ sucursal.aforoActual }}</span>
+              </template>
+            </stats-card>
+          </div>
 
-      <!--Tables-->
-      <b-row class="mt-5">
-        <b-col xl="8" class="mb-5 mb-xl-0">
-          <page-visits-table></page-visits-table>
-        </b-col>
-        <b-col xl="4" class="mb-5 mb-xl-0">
-          <social-traffic-table></social-traffic-table>
-        </b-col>
-      </b-row>
-      <!--End tables-->
-    </b-container>
+        </div>
+      </b-card-header>
 
-  </div>
+
+
+      <div class="container">
+        <card header-classes="bg-transparent">
+          <div class="row justify-content-start">
+            <div class="col">
+              <base-input
+                type="date"
+                label="Fecha Inicio:"
+                v-model="startDate"
+              />
+            </div>
+            <div class="col">
+              <base-input type="date" label="Fecha Fin:" v-model="endDate" />
+            </div>
+          </div>
+        </card>
+
+        <card class="bg-transparent">
+          <div class="row justify-content-start">
+            <div class="col">
+              <h5 class="h3  mb-0">Aforo</h5>
+            </div>
+            <div class="col">
+
+              <b-nav class="nav-pills justify-content-end">
+
+                <b-nav-item
+                  :active="bigLineChart.activeIndex === 0"
+                  @click="initBigChart(0)"
+                  link-classes="py-1 px-2"
+                >
+                  <span class="d-none d-md-block">Día</span>
+                  <span class="d-md-none">D</span>
+                </b-nav-item>
+                <b-nav-item
+                  :active="bigLineChart.activeIndex === 1"
+                  @click="initBigChart(1)"
+                  link-classes="py-1 px-2"
+                >
+                  <span class="d-none d-md-block">Semana</span>
+                  <span class="d-md-none">S</span>
+                </b-nav-item>
+                <b-nav-item @click="initBigChart(2)"
+                  :active="bigLineChart.activeIndex === 2"
+                  link-classes="py-1 px-2"
+                >
+                  <span class="d-none d-md-block">Mes</span>
+                  <span class="d-md-none">M</span>
+                </b-nav-item>
+                <b-nav-item
+                  :active="bigLineChart.activeIndex === 3"
+                  @click="initBigChart(3)"
+                  link-classes="py-1 px-2"
+                >
+                  <span class="d-none d-md-block">Año</span>
+                  <span class="d-md-none">A</span>
+                </b-nav-item>
+              </b-nav>
+            </div>
+          </div>
+
+
+
+          <line-chart
+            :height="350"
+            :chart-data="bigLineChart.chartData"
+            :extra-options="bigLineChart.extraOptions"
+          >
+          </line-chart>
+        </card>
+
+        <!-- End charts-->
+      </div>
+    </b-card>
+  </b-container>
 </template>
 <script>
-  // Charts
-  import * as chartConfigs from '@/components/Charts/config';
-  import LineChart from '@/components/Charts/LineChart';
-  import BarChart from '@/components/Charts/BarChart';
+import * as chartConfigs from '@/components/Charts/config';
+import LineChart from "@/components/Charts/LineChart";
 
-  // Components
-  import BaseProgress from '@/components/BaseProgress';
-  import StatsCard from '@/components/Cards/StatsCard';
+// Components
+import BaseProgress from "@/components/BaseProgress";
+import StatsCard from "@/components/Cards/StatsCard";
 
-  // Tables
-  import SocialTrafficTable from './Dashboard/SocialTrafficTable';
-  import PageVisitsTable from './Dashboard/PageVisitsTable';
-
-  export default {
-    components: {
-      LineChart,
-      BarChart,
-      BaseProgress,
-      StatsCard,
-      PageVisitsTable,
-      SocialTrafficTable
-    },
-    data() {
-      return {
-        bigLineChart: {
+export default {
+  components: {
+    LineChart,
+    BaseProgress,
+    StatsCard
+  },
+  data() {
+    return {
+      allData: [
+        [
+          { x: "9 am", y: 10 },
+          { x: "10 am", y: 20 },
+          { x: "11 am", y: 20 },
+          { x: "12 pm", y: 50 },
+          { x: "1 pm", y: 20 },
+          { x: "2 pm", y: 40 },
+          { x: "3 pm", y: 20 },
+          { x: "4 pm", y: 80 },
+          { x: "5 pm", y: 20 },
+          { x: "6 pm", y: 90 },
+          { x: "7 pm", y: 5 }
+        ],
+        [
+          { x: "Lunes", y: 20 },
+          { x: "Martes", y: 50 },
+          { x: "Miercoles", y: 20 },
+          { x: "Jueves", y: 20 },
+          { x: "Viernes", y: 80 },
+          { x: "Sabado", y: 20 },
+          { x: "Domingo", y: 120 }
+        ],
+        [
+          { x: "Ene", y: 140 },
+          { x: "Feb", y: 160 },
+          { x: "Mar", y: 200 },
+          { x: "Abr", y: 120 },
+          { x: "May", y: 20 },
+          { x: "Jun", y: 20 },
+          { x: "Jul", y: 120 },
+          { x: "Ago", y: 20 },
+          { x: "Sep", y: 20 },
+          { x: "Oct", y: 180 },
+          { x: "Nov", y: 120 },
+          { x: "Dic", y: 215 }
+        ],
+        [
+          { x: "2015", y: 1500 },
+          { x: "2016", y: 17850 },
+          { x: "2017", y: 16592 },
+          { x: "2018", y: 35920 },
+          { x: "2019", y: 13580 },
+          { x: "2020", y: 32420 },
+          { x: "2021", y: 23120 }
+        ]
+      ],
+      bigLineChart: {
           allData: [
             [0, 20, 10, 30, 15, 40, 20, 60, 60],
             [0, 20, 5, 25, 10, 30, 15, 40, 40]
@@ -177,41 +195,58 @@
           },
           extraOptions: chartConfigs.blueChartOptions,
         },
-        redBarChart: {
-          chartData: {
-            labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-              label: 'Sales',
-              data: [25, 20, 30, 22, 17, 29]
-            }]
-          },
-          extraOptions: chartConfigs.blueChartOptions
-        }
+
+      sucursal: {
+        nombre: "MINISO Madero",
+        aforoMax: 200,
+        aforoActual: 180
+      },
+      porcentajeAforo: "0%",
+      startDate: "",
+      endDate: ""
+    };
+  },
+  methods: {
+    initBigChart(index) {
+      var labelX = [];
+      var labelY = [];
+      this.bigLineChart.chartData = {};
+
+      this.allData[index].forEach(function(element) {
+        labelX.push(element.x);
+        labelY.push(element.y);
+        console.log(element);
+      });
+
+      var chartData = {
+        datasets: [
+          {
+            label: "Aforo",
+            data: labelY
+          }
+        ],
+        labels: labelX
       };
+      this.bigLineChart.chartData = chartData;
+      this.bigLineChart.activeIndex = index;
     },
-    methods: {
-      initBigChart(index) {
-        let chartData = {
-          datasets: [
-            {
-              label: 'Performance',
-              data: this.bigLineChart.allData[index]
-            }
-          ],
-          labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        };
-        this.bigLineChart.chartData = chartData;
-        this.bigLineChart.activeIndex = index;
-      }
-    },
-    mounted() {
-      this.initBigChart(0);
+    calculaPorcentajeAforo() {
+      this.porcentajeAforo =
+        (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100 + "%";
     }
-  };
+  },
+  created() {
+    this.calculaPorcentajeAforo();
+    this.initBigChart(3);
+  }
+};
 </script>
 <style>
-.el-table .cell{
-  padding-left: 0px;
-  padding-right: 0px;
+.container {
+  max-width: 1180px;
+}
+.card {
+  max-width: 1180px;
+  width: 100%;
 }
 </style>
