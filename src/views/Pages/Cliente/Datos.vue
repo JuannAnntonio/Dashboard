@@ -59,12 +59,6 @@
         <el-table-column label="Dirección" min-width="140px" prop="direccion"/>
         <el-table-column label="Sub Total" min-width="135px" prop="subTotal"/>
 
-        <el-table-column label="Estado" min-width="220px" prop="status">
-          <template v-slot="{ row }">
-            <span class="badge" :class="`bg-${row.status.statusType}`" >{{row.status.descripcion}}
-            </span>
-          </template>
-        </el-table-column>
       </el-table>
 
       <!--b-card-footer class="py-4 d-flex justify-content-end">
@@ -98,7 +92,10 @@ export default {
 
 <style>
 .container {
-  max-width: 1180px;
+  max-width: 95%!important;
+}
+.card{
+  width: 100%;
 }
 .badge {
   font-size: 95%;

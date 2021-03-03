@@ -10,27 +10,20 @@
         header-row-class-name="thead-light"
         :data="dispositivos"
       >
-        <el-table-column label="# Dispositivo" min-width="155px" prop="id">
-        </el-table-column>
+        <el-table-column label="# Dispositivo" min-width="155px" prop="id"/>
+        
         <el-table-column
           label="MAC Dispositivo"
           prop="macDispositivo"
-          min-width="175px"
-        >
-        </el-table-column>
-
-        <el-table-column label="Sucursal" min-width="195px" prop="sucursal">
-        </el-table-column>
-
-        <el-table-column label="Ubicación" min-width="180px" prop="ubicacion">
-        </el-table-column>
-
-        <el-table-column label="Registro" min-width="200px" prop="registro">
-        </el-table-column>
-
-        <el-table-column label="Estatus" prop="status" min-width="240px">
+          min-width="180px"
+        />
+        <el-table-column label="Sucursal" min-width="200px" prop="sucursal"/>
+        <el-table-column label="Ubicación" min-width="180px" prop="ubicacion"/>
+        <el-table-column label="Registro" min-width="195px" prop="registro"/>
+        
+        <el-table-column label="Estatus" prop="status" min-width="210px">
           <template v-slot="{ row }">
-            <span class="badge bg-secondary">{{row.status.descripcion}}
+            <span class="badge" :class="`bg-${row.status.statusType}`" >{{row.status.descripcion}}
             </span>
           </template>
         </el-table-column>
@@ -65,6 +58,9 @@ export default {
 </script>
 <style>
 .container {
-  max-width: 1180px;
+  max-width: 95%!important;
+}
+.card{
+  width: 100%;
 }
 </style>

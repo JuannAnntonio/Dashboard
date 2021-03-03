@@ -8,11 +8,7 @@ export default [
     fecha: '2020-08-25 17:50:30',
     altura: '199.000',
     direccion: 'Salió',
-    subTotal: 2,
-    status: {
-      statusType: 'success',
-      descripcion: 'EN LINEA HACE 5 MIN'
-    }
+    subTotal: 2
   },
   {
     cliente: 'Minusmonismo',
@@ -22,11 +18,7 @@ export default [
     fecha: '2020-08-25 17:50:30',
     altura: '199.000',
     direccion: 'Salió',
-    subTotal: 2,
-    status: {
-      statusType: 'warning',
-      descripcion: 'EN LINEA HACE 5 MIN'
-    }
+    subTotal: 2
   },
   {
     cliente: 1544,
@@ -36,10 +28,6 @@ export default [
     fecha: '2020-08-25 17:50:30',
     altura: '199.000',
     direccion: 'Entró',
-    subTotal: 2,
-    status: {
-      statusType: 'danger',
-      descripcion: 'EN LINEA HACE 5 MIN'
-    }
+    subTotal: 2
   }
 ]

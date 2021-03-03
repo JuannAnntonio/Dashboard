@@ -1,7 +1,6 @@
 <template>
   <b-container class="pb-6 pt-6  d-flex">
-    <b-card no-body>
-      <b-card-header class="border-0">
+    <b-card class="w-100">
         <div class="row justify-content-start">
           <div class="col">
             <stats-card
@@ -37,10 +36,8 @@
             </stats-card>
           </div>
         </div>
-      </b-card-header>
 
       <div class="container">
-        <card header-classes="bg-transparent">
           <div class="row justify-content-start">
             <div class="col-xl-9 col-md-11 col-sm-11">
               <div class="row justify-content-start">
@@ -143,7 +140,6 @@
                 </div>
             </div>
           </div>
-        </card>
       </div>
     </b-card>
   </b-container>
@@ -274,14 +270,11 @@ export default {
 </script>
 <style>
 .container {
-  max-width: 1180px;
-  margin-bottom: 1rem;
+  max-width: 95%!important;
 }
-.card {
-  max-width: 1180px;
+.card{
   width: 100%;
 }
-
 #circulo-borde {
   width: 120px;
   height: 120px;
