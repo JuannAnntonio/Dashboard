@@ -19,7 +19,7 @@
             <stats-card
               title="Aforo actual"
               type="gradient-info"
-              :sub-title="porcentajeAforo"
+              :sub-title="porcentajeAforo+'%'"
               icon="ni ni-chart-bar-32"
               class="mb-2"
             >
@@ -121,13 +121,11 @@ import LineChart from "@/components/Charts/LineChart";
 
 // Components
 import BaseProgress from "@/components/BaseProgress";
-import StatsCard from "@/components/Cards/StatsCard";
 
 export default {
   components: {
     LineChart,
-    BaseProgress,
-    StatsCard
+    BaseProgress
   },
   data() {
     return {
@@ -232,7 +230,7 @@ export default {
     },
     calculaPorcentajeAforo() {
       this.porcentajeAforo =
-        (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100 + "%";
+        (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100 ;
     }
   },
   created() {

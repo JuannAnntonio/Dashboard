@@ -1,6 +1,5 @@
 <template>
   <div class="wrapper">
-    <notifications></notifications>
     <side-bar>
       <template slot="links">
         <sidebar-item
@@ -30,14 +29,6 @@
         >
         </sidebar-item>
 
-        <sidebar-item
-          :link="{
-            name: 'Login',
-            path: '/login',
-            icon: 'ni ni-key-25'
-          }"
-        >
-        </sidebar-item>
       </template>
 
       <template slot="links-after">

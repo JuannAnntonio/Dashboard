@@ -30,12 +30,8 @@
 
         <el-table-column label="Estatus" prop="status" min-width="240px">
           <template v-slot="{ row }">
-            <badge class="badge-dot mr-4">
-              <i :class="`bg-${row.status.statusType}`"></i>
-              <span class="status" :class="`text-${row.status.statusType}`">{{
-                row.status.descripcion
-              }}</span>
-            </badge>
+            <span class="badge bg-secondary">{{row.status.descripcion}}
+            </span>
           </template>
         </el-table-column>
       </el-table>
