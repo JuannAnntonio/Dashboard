@@ -56,6 +56,14 @@
           }"
         >
         </sidebar-item>
+          <sidebar-item
+              :link="{
+            name: 'Dispositivos en sucursal',
+            path: '/dispositivosSucursal',
+            icon: 'fa fa-tablet-alt'//camera-retro
+          }"
+          >
+          </sidebar-item>
       </template>
     </side-bar>
 

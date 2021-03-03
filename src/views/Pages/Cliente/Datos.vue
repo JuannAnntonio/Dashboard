@@ -48,27 +48,26 @@
           </div>
       </div>
 
-      <el-table
-        class="table-responsive table"
-        header-row-class-name="thead-light"
-        :data="datos"
-      >
+      <el-table class="table-responsive table" header-row-class-name="thead-light" :data="datos">
+
         <el-table-column label="# Dispositivo" min-width="155px" prop="id">
+
         </el-table-column>
-        <el-table-column
-          label="MAC Dispositivo"
-          prop="macDispositivo"
-          min-width="175px"
-        >
+
+        <el-table-column label="MAC Dispositivo" prop="macDispositivo" min-width="175px">
+
         </el-table-column>
 
         <el-table-column label="Sucursal" min-width="195px" prop="sucursal">
+
         </el-table-column>
 
         <el-table-column label="Ubicación" min-width="180px" prop="ubicacion">
+
         </el-table-column>
 
         <el-table-column label="Registro" min-width="200px" prop="registro">
+
         </el-table-column>
 
         <el-table-column label="Estatus" prop="status" min-width="240px">
