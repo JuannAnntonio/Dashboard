@@ -45,8 +45,12 @@ const routes = [
         path: '/dispositivos',
         name: 'dispositivos',
         component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/Admin/Dispositivos.vue')
+      },
+      {
+        path: '/dispositivosSucursal',
+        name: 'dispositivosSucursal',
+        component: () => import(/* webpackChunkName: "demo" */ '../views/Pages/Admin/DispositivosSucursal.vue')
       }
-
     ]
   }
 ];
