@@ -43,36 +43,25 @@
               </base-input>
             </div>
             <div class="col align-self-center">
-              <button class="btn" style="width: 195px;"><i class="fa fa-download"></i> Descargar informe</button>
+              <button class="btn" style="width: 195px;"><span><i class="fa fa-download"></i> Descargar informe</span></button>
             </div>
           </div>
       </div>
 
       <el-table class="table-responsive table" header-row-class-name="thead-light" :data="datos">
 
-        <el-table-column label="# Dispositivo" min-width="155px" prop="id">
+        <el-table-column label="Cliente" min-width="178px" prop="cliente"/>
+        <el-table-column label="Sucursal" min-width="175px" prop="sucursal" />
+        <el-table-column label="Tipo Disp." min-width="135px" prop="tipoDispositivo"/>
+        <el-table-column label="Ubicación Disp." min-width="189px" prop="ubicacionDispositivo"/>
+        <el-table-column label="Fecha" min-width="191px" prop="fecha"/>
+        <el-table-column label="Altura" min-width="118px" prop="altura"/>
+        <el-table-column label="Dirección" min-width="140px" prop="direccion"/>
+        <el-table-column label="Sub Total" min-width="135px" prop="subTotal"/>
 
-        </el-table-column>
-
-        <el-table-column label="MAC Dispositivo" prop="macDispositivo" min-width="175px">
-
-        </el-table-column>
-
-        <el-table-column label="Sucursal" min-width="195px" prop="sucursal">
-
-        </el-table-column>
-
-        <el-table-column label="Ubicación" min-width="180px" prop="ubicacion">
-
-        </el-table-column>
-
-        <el-table-column label="Registro" min-width="200px" prop="registro">
-
-        </el-table-column>
-
-        <el-table-column label="Estatus" prop="status" min-width="240px">
+        <el-table-column label="Estado" min-width="220px" prop="status">
           <template v-slot="{ row }">
-            <span class="badge bg-secondary">{{row.status.descripcion}}
+            <span class="badge" :class="`bg-${row.status.statusType}`" >{{row.status.descripcion}}
             </span>
           </template>
         </el-table-column>
@@ -111,4 +100,12 @@ export default {
 .container {
   max-width: 1180px;
 }
+.badge {
+  font-size: 95%;
+  color: white;
+}
+.btn>span {
+  color: var(--primary);
+}
+
 </style>

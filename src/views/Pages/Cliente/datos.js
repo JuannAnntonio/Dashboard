@@ -1,36 +1,45 @@
 
 export default [
   {
-    id: 1544,
-    macDispositivo: '34:45:F3:C0',
-    sucursal: 'MINISO MADERO',
-    ubicacion: 'SALIDA SUR',
-    registro: '2020-08-25 17:50:30',
+    cliente: 'Cliente de prueba',
+    sucursal: 'Sucursal Virtual',
+    tipoDispositivo: 'Camara',
+    ubicacionDispositivo: 'Ubicacion Principal',
+    fecha: '2020-08-25 17:50:30',
+    altura: '199.000',
+    direccion: 'Salió',
+    subTotal: 2,
     status: {
       statusType: 'success',
       descripcion: 'EN LINEA HACE 5 MIN'
     }
   },
   {
-    id: 9837,
-    macDispositivo: '38:45:F3:C1',
-    sucursal: 'MINISO MADERO',
-    ubicacion: 'ENTRADA NORTE',
-    registro: '2020-08-25 16:50:30',
+    cliente: 'Minusmonismo',
+    sucursal: 'De La Vista',
+    tipoDispositivo: 'RF id',
+    ubicacionDispositivo: 'Mostrador Principal',
+    fecha: '2020-08-25 17:50:30',
+    altura: '199.000',
+    direccion: 'Salió',
+    subTotal: 2,
     status: {
-      statusType: 'success',
-      descripcion: 'EN LINEA HACE 45 MIN'
+      statusType: 'warning',
+      descripcion: 'EN LINEA HACE 5 MIN'
     }
   },
   {
-    id: 5437,
-    macDispositivo: '04:45:F3:C2',
-    sucursal: 'MINISO CENTRO',
-    ubicacion: 'SALIDA PONIENTE',
-    registro: '2021-02-12 13:00:30',
+    cliente: 1544,
+    sucursal: 'MINISO MADERO',
+    tipoDispositivo: 'Camara',
+    ubicacionDispositivo: 'Ubicacion Principal',
+    fecha: '2020-08-25 17:50:30',
+    altura: '199.000',
+    direccion: 'Entró',
+    subTotal: 2,
     status: {
       statusType: 'danger',
-      descripcion: 'EN LINEA HACE 12 MIN'
+      descripcion: 'EN LINEA HACE 5 MIN'
     }
   }
 ]
