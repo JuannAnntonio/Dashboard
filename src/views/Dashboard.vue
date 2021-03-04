@@ -12,7 +12,7 @@
                 Aforo máx:
                 <span class="text-primary">{{ sucursal.aforoMax }}</span>
                 <br />
-                Aforo actual:
+                Aforo:
                 <span class="text-primary">{{ sucursal.aforoActual }}</span>
               </template>
             </stats-card>
@@ -107,7 +107,6 @@
                   <line-chart
                     :height="350"
                     :chart-data="bigLineChart.chartData"
-                    :extra-options="bigLineChart.extraOptions"
                   >
                   </line-chart>
                 </div>
@@ -115,13 +114,13 @@
             </div>
             <div class="col-xl-3 col-md-6 col-sm-5">
                 <br />
-                <h3 class="h3" style="text-align: center;">Aforo actual</h3>
+                <h3 class="h3" style="text-align: center;">Visitantes</h3>
                 <br />
                 <div class="row justify-content-start" style="margin-left: auto; margin-right: auto">
                   <div class="col">
                     <div id="circulo-borde">
                       <div id="circulo-centro">
-                        <p>145</p>
+                        <p>{{sucursal.adultos}}</p>
                       </div>
                     </div>
                     <h4 class="h4" style="text-align:center">Adultos</h4>
@@ -132,7 +131,7 @@
                   <div class="col">
                     <div id="circulo-borde">
                       <div id="circulo-centro">
-                        <p>54</p>
+                        <p>{{sucursal.niños}}</p>
                       </div>
                     </div>
                     <h4 class="h4" style="text-align:center">Niños</h4>
@@ -150,6 +149,7 @@ import LineChart from "@/components/Charts/LineChart";
 
 // Components
 import BaseProgress from "@/components/BaseProgress";
+import datos from "./Pages/dataDashboard";
 
 export default {
   components: {
@@ -158,53 +158,7 @@ export default {
   },
   data() {
     return {
-      allData: [
-        [
-          { x: "9 am", y: 10 },
-          { x: "10 am", y: 20 },
-          { x: "11 am", y: 20 },
-          { x: "12 pm", y: 50 },
-          { x: "1 pm", y: 20 },
-          { x: "2 pm", y: 40 },
-          { x: "3 pm", y: 20 },
-          { x: "4 pm", y: 80 },
-          { x: "5 pm", y: 20 },
-          { x: "6 pm", y: 90 },
-          { x: "7 pm", y: 5 },
-        ],
-        [
-          { x: "Lunes", y: 20 },
-          { x: "Martes", y: 50 },
-          { x: "Miercoles", y: 20 },
-          { x: "Jueves", y: 20 },
-          { x: "Viernes", y: 80 },
-          { x: "Sabado", y: 20 },
-          { x: "Domingo", y: 120 },
-        ],
-        [
-          { x: "Ene", y: 140 },
-          { x: "Feb", y: 160 },
-          { x: "Mar", y: 200 },
-          { x: "Abr", y: 120 },
-          { x: "May", y: 20 },
-          { x: "Jun", y: 20 },
-          { x: "Jul", y: 120 },
-          { x: "Ago", y: 20 },
-          { x: "Sep", y: 20 },
-          { x: "Oct", y: 180 },
-          { x: "Nov", y: 120 },
-          { x: "Dic", y: 215 },
-        ],
-        [
-          { x: "2015", y: 17000 },
-          { x: "2016", y: 15850 },
-          { x: "2017", y: 16592 },
-          { x: "2018", y: 35920 },
-          { x: "2019", y: 13580 },
-          { x: "2020", y: 32420 },
-          { x: "2021", y: 23120 },
-        ],
-      ],
+      datos,
       labelX: [],
       labelY: [],
       bigLineChart: {
@@ -217,16 +171,16 @@ export default {
             },
           ],
           labels: this.labelX,
-        },
-        extraOptions: chartConfigs.blueChartOptions,
+        }
       },
-
-      sucursal: {
-        nombre: "MINISO MADERO",
-        aforoMax: 200,
-        aforoActual: 180,
+      sucursal : {
+        nombre: "",
+        aforoMax: 0,
+        aforoActual: 0,
+        niños:0,
+        adultos:0
       },
-      porcentajeAforo: "0%",
+      porcentajeAforo: "0",
       startDate: "",
       endDate: "",
     };
@@ -237,13 +191,28 @@ export default {
       var labelY = [];
       this.bigLineChart.chartData = {};
 
-      this.allData[index].forEach(function(element) {
-        labelX.push(element.x);
-        labelY.push(element.y);
+//console.log(this.datos[index].aforo);
+      var niños = 0;
+      var adultos = 0;
+      var aforoMax=0;
+      var sucursal = "";
+      this.datos[index].aforo.forEach(function(element) {
+        labelX.push(element.grafica.x);
+        labelY.push(element.grafica.y); 
+        aforoMax = element.aforoMax;
+        sucursal = element.sucursal;
+        niños += element.niño;
+        adultos += element.adulto;
       });
 
+      this.sucursal.aforoMax = aforoMax;
+      this.sucursal.nombre = sucursal;      
+      this.sucursal.niños= niños;
+      this.sucursal.adultos= adultos;
+      this.sucursal.aforoActual= Math.trunc((niños+adultos)/5);
       this.labelX = labelX;
       this.labelY = labelY;
+      
       console.log(this.labelX);
       var chartData = {
         datasets: [
@@ -256,14 +225,18 @@ export default {
       };
       this.bigLineChart.chartData = chartData;
       this.bigLineChart.activeIndex = index;
+
+      this.calculaPorcentajeAforo();
     },
     calculaPorcentajeAforo() {
+      console.log(this.sucursal.aforoActual);
+      console.log(this.sucursal.aforoMax );
       this.porcentajeAforo =
         (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100;
+      console.log(this.porcentajeAforo);
     },
   },
   created() {
-    this.calculaPorcentajeAforo();
     this.initBigChart(3);
   },
 };
@@ -275,6 +248,17 @@ export default {
 .card{
   width: 100%;
 }
+.text-primary{
+  font-weight: bolder;
+}
+.row{
+  padding-bottom: 2px;
+  padding-top: 2px;
+}
+.col-md-6{
+  max-width: 30%!important;
+}
+
 #circulo-borde {
   width: 120px;
   height: 120px;
