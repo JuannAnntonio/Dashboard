@@ -21,8 +21,16 @@ import App from './App.vue';
 // router setup
 import router from './routes/router';
 
+// datePicker
+import flatPickr from 'vue-flatpickr-component'  
+import 'flatpickr/dist/flatpickr.css'  
+import { Spanish } from 'flatpickr/dist/l10n/es.js'  
+
 // plugin setup
 Vue.use(DashboardPlugin);
+flatpickr.localize(Spanish);
+Vue.use(flatPickr);
+
 
 /* eslint-disable no-new */
 new Vue({
