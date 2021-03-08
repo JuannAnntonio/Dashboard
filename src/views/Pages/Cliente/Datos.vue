@@ -43,7 +43,7 @@
               </base-input>
             </div>
             <div class="col align-self-center">
-              <button class="btn" style="width: 195px;"><span><i class="fa fa-download"></i> Descargar informe</span></button>
+              <button class="btn" style="width: 195px;"><span><i class="fa fa-download"></i>Descargar informe</span></button>
             </div>
           </div>
       </div>
@@ -74,6 +74,7 @@
 <script>
 import datos from "./datos";
 import { Table, TableColumn } from "element-ui";
+
 export default {
   name: "reporte-dispositivos",
   components: {
