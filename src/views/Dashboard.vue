@@ -42,7 +42,7 @@
           <div class="col-xl-9 col-md-11 col-sm-11">
             <div class="row justify-content-start">
               <div class="col-auto">
-                <div class="row">
+                <div class="row" v-if="optionDate">
                   <div class="col">
                     <base-input label="Fecha Inicio:">
                       <flat-picker
@@ -54,7 +54,7 @@
                       </flat-picker>
                     </base-input>
                   </div>
-                  <div class="col"> 
+                  <div class="col">
                     <base-input label="Fecha Fin:">
                       <flat-picker
                         placeholder="dd / mm / aaaa"
@@ -64,6 +64,19 @@
                       >
                       </flat-picker>
                     </base-input>
+                  </div>
+                  <div
+                    class="col"
+                    style="margin-left: auto; margin-right: auto; margin-bottom: auto; margin-top: auto;"
+                  >
+                    <button
+                      type="submit"
+                      size="sm"
+                      class="login-button"
+                      style="min-width: 0.5px; height: 20px; font-size: 0.875rem !important; font-weight: 500"
+                    >
+                      Buscar
+                    </button>
                   </div>
                 </div>
               </div>
@@ -76,7 +89,10 @@
                 <b-nav class="nav-pills justify-content-end">
                   <b-nav-item
                     :active="bigLineChart.activeIndex === 0"
-                    @click="initBigChart(0)"
+                    @click="
+                      optionDate = false;
+                      initBigChart(0);
+                    "
                     link-classes="py-0 px-2"
                   >
                     <span class="d-none d-md-block">Día</span>
@@ -84,14 +100,20 @@
                   </b-nav-item>
                   <b-nav-item
                     :active="bigLineChart.activeIndex === 1"
-                    @click="initBigChart(1)"
+                    @click="
+                      optionDate = false;
+                      initBigChart(1);
+                    "
                     link-classes="py-0 px-2"
                   >
                     <span class="d-none d-md-block">Semana</span>
                     <span class="d-md-none">S</span>
                   </b-nav-item>
                   <b-nav-item
-                    @click="initBigChart(2)"
+                    @click="
+                      optionDate = false;
+                      initBigChart(2);
+                    "
                     :active="bigLineChart.activeIndex === 2"
                     link-classes="py-0 px-2"
                   >
@@ -100,11 +122,25 @@
                   </b-nav-item>
                   <b-nav-item
                     :active="bigLineChart.activeIndex === 3"
-                    @click="initBigChart(3)"
+                    @click="
+                      optionDate = false;
+                      initBigChart(3);
+                    "
                     link-classes="py-0 px-2"
                   >
                     <span class="d-none d-md-block">Año</span>
                     <span class="d-md-none">A</span>
+                  </b-nav-item>
+                  <b-nav-item
+                    :active="bigLineChart.activeIndex === 4"
+                    @click="
+                      optionDate = true;
+                      bigLineChart.activeIndex = 4;
+                    "
+                    link-classes="py-0 px-2"
+                  >
+                    <span class="d-none d-md-block">Personaliza</span>
+                    <span class="d-md-none">P</span>
                   </b-nav-item>
                 </b-nav>
               </div>
@@ -112,7 +148,11 @@
             <br />
             <div class="row justify-content-start">
               <div class="col">
-                <line-chart :height="350" :chart-data="bigLineChart.chartData">
+                <line-chart
+                  :height="350"
+                  :chart-data="bigLineChart.chartData"
+                  :extra-options="bigLineChart.extraOptions"
+                >
                 </line-chart>
               </div>
             </div>
@@ -161,15 +201,15 @@ import LineChart from "@/components/Charts/LineChart";
 import BaseProgress from "@/components/BaseProgress";
 import datos from "./Pages/dataDashboard";
 
-
 export default {
   components: {
     LineChart,
     BaseProgress,
-    flatPicker
+    flatPicker,
   },
   data() {
     return {
+      optionDate: false,
       datos,
       labelX: [],
       labelY: [],
@@ -183,6 +223,21 @@ export default {
             },
           ],
           labels: this.labelX,
+        },
+        extraOptions: {
+          /*elements: {
+            point: {
+              radius: 3,
+              backgroundColor: "red",
+            },
+            line: {
+              tension: 0.4,
+              borderWidth: 2,
+              borderColor: "red",
+              backgroundColor: "transparent",
+              borderCapStyle: "rounded",
+            },
+          }*/
         },
       },
       sucursal: {
@@ -198,8 +253,8 @@ export default {
       maxDate: "",
       configEndDate: {
         maxDate: new Date(),
-        dateFormat: 'd-M-Y',
-        altInput: true
+        dateFormat: "d-M-Y",
+        altInput: true,
       },
     };
   },
@@ -268,6 +323,21 @@ export default {
 }
 .text-primary {
   font-weight: bolder;
+  color: var(--primary) !important;
+}
+.bg-gradient-primary {
+  background: var(--primary) !important;
+}
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+  color: var(--secondary) !important;
+  background-color: var(--primary) !important;
+}
+.nav-pills .nav-link {
+  color: var(--primary) !important;
 }
 .row {
   padding-bottom: 2px;
@@ -276,7 +346,8 @@ export default {
 .col-md-6 {
   max-width: 30% !important;
 }
-.flatpickr-input[readonly], .form-control[readonly]{
+.flatpickr-input[readonly],
+.form-control[readonly] {
   background-color: #fff;
 }
 

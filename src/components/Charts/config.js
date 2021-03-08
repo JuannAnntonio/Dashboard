@@ -59,8 +59,8 @@ function chartOptions() {
         elements: {
           point: {
             radius: 5,
-            backgroundColor: colors.theme['secondary'],
             borderColor: colors.theme['primary'],
+            backgroundColor: colors.theme['secondary']            
           },
           line: {
             tension: .4,

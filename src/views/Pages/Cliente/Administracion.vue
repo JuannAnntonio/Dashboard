@@ -11,12 +11,6 @@
         :data="dispositivos"
       >
         <el-table-column label="# Dispositivo" min-width="155px" prop="id"/>
-        
-        <el-table-column
-          label="MAC Dispositivo"
-          prop="macDispositivo"
-          min-width="180px"
-        />
         <el-table-column label="Sucursal" min-width="200px" prop="sucursal"/>
         <el-table-column label="Ubicación" min-width="180px" prop="ubicacion"/>
         <el-table-column label="Registro" min-width="195px" prop="registro"/>
