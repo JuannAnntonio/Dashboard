@@ -5,9 +5,15 @@
         <div class="col">
           <stats-card
             title="Sucursal"
-            :sub-title="sucursal.nombre"
-            class="mb-2"
           >
+          <h5 class="card-title text-uppercase text-muted mb-0">Sucursal</h5>
+            <div class="wrap-input mb-3 mt-3">
+              <select class="input" id="sucursal" v-model="sucursal">
+                <option v-for="sucursal in sucursales" :value="sucursal">{{
+                  sucursal.nombre
+                }}</option>
+              </select>
+            </div>
             <template slot="footer">
               Aforo máx:
               <span class="text-primary">{{ sucursal.aforoMax }}</span>
@@ -39,7 +45,7 @@
 
       <div class="container">
         <div class="row justify-content-start">
-          <div class="col-xl-9 col-md-11 col-sm-11">
+          <div class="col-xl-7 col-md-10 col-sm-10">
             <div class="row justify-content-start">
               <div class="col-auto">
                 <div class="row" v-if="optionDate">
@@ -139,8 +145,21 @@
                     "
                     link-classes="py-0 px-2"
                   >
-                    <span class="d-none d-md-block">Personalizar</span>
-                    <span class="d-md-none">P</span>
+                    <span class="d-none d-md-block">
+                      <el-tooltip
+                        placement="bottom"
+                        content="Fecha Personalizada"
+                      >
+                        <i class="ni ni-calendar-grid-58" />
+                      </el-tooltip>
+                    </span>
+                    <span class="d-md-none"
+                      ><el-tooltip
+                        placement="bottom"
+                        content="Fecha Personalizada"
+                      >
+                        <i class="ni ni-calendar-grid-58" /> </el-tooltip
+                    ></span>
                   </b-nav-item>
                 </b-nav>
               </div>
@@ -157,37 +176,14 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-3 col-md-6 col-sm-5">
+          <div class="col-xl-5 col-md-7 col-sm-10">
             <br />
-            <h3 class="h3" style="text-align: center;">Visitantes</h3>
-            <br />
-            <div
-              class="row justify-content-start"
-              style="margin-left: auto; margin-right: auto"
+            <PastelChart
+              :height="300"
+              :chart-data="chartDonaData"
+              :options="optionsPieData"
             >
-              <div class="col">
-                <div id="circulo-borde">
-                  <div id="circulo-centro">
-                    <p>{{ sucursal.adultos }}</p>
-                  </div>
-                </div>
-                <h4 class="h4" style="text-align:center">Adultos</h4>
-              </div>
-            </div>
-            <br />
-            <div
-              class="row justify-content-start"
-              style="margin-left: auto; margin-right: auto"
-            >
-              <div class="col">
-                <div id="circulo-borde">
-                  <div id="circulo-centro">
-                    <p>{{ sucursal.niños }}</p>
-                  </div>
-                </div>
-                <h4 class="h4" style="text-align:center">Niños</h4>
-              </div>
-            </div>
+            </PastelChart>
           </div>
         </div>
       </div>
@@ -199,6 +195,7 @@ import flatPicker from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import LineChart from "@/components/Charts/LineChart";
 import BaseProgress from "@/components/BaseProgress";
+import PastelChart from "@/components/Charts/PastelChart";
 import datos from "./Pages/dataDashboard";
 
 export default {
@@ -206,6 +203,7 @@ export default {
     LineChart,
     BaseProgress,
     flatPicker,
+    PastelChart,
   },
   data() {
     return {
@@ -241,12 +239,41 @@ export default {
         },
       },
       sucursal: {
-        nombre: "",
+        nombre: 'Plaza Virtual',
         aforoMax: 0,
         aforoActual: 0,
         niños: 0,
         adultos: 0,
       },
+      sucursales: [{nombre:'Plaza Virtual'},{nombre:'Plaza Madero'}],
+      dataPastel: [],
+      optionsPieData: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            fontColor: "black",
+            padding: 50,
+          },
+        },
+        title: {
+          display: true,
+          text: "Visitantes",
+        },
+      },
+      chartDonaData: {
+        labels: ["Adultos", "Niños"],
+        datasets: [
+          {
+            data: [0, 0],
+            backgroundColor: ["#5e72e4", "white"],
+            borderColor: "#5e72e4",
+            hoverBackgroundColor: ["#5e72e4", "white"],
+            hoverBorderColor: "#5e72e4",
+          },
+        ],
+      },
+
       porcentajeAforo: "0",
       startDate: "",
       endDate: "",
@@ -262,8 +289,9 @@ export default {
     initBigChart(index) {
       var labelX = [];
       var labelY = [];
+      var dataPastel = [];
       this.bigLineChart.chartData = {};
-
+      this.chartDonaData.datasets[0].data = [];
       //console.log(this.datos[index].aforo);
       var niños = 0;
       var adultos = 0;
@@ -285,6 +313,11 @@ export default {
       this.sucursal.aforoActual = Math.trunc((niños + adultos) / 5);
       this.labelX = labelX;
       this.labelY = labelY;
+      dataPastel = [adultos, niños];
+      this.dataPastel = dataPastel;
+      console.log(dataPastel);
+
+      this.chartDonaData.datasets[0].data = dataPastel;
 
       //console.log(this.labelX);
       var chartData = {

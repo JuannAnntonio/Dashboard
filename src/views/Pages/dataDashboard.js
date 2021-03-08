@@ -6,7 +6,7 @@ export default [
           "sucursal": "Plaza Virtual",
           "aforoMax": 100,
           "Staff": 12,
-          "niño": 57,
+          "niño": 7,
           "adulto": 10,
           "grafica": {
             "x": "8 am",
@@ -18,7 +18,7 @@ export default [
           "sucursal": "Plaza Virtual",
           "aforoMax": 100,
           "Staff": 12, 
-          "niño": 86,
+          "niño": 8,
           "adulto": 35,
           "grafica": {
             "x": "9 am",
@@ -42,7 +42,7 @@ export default [
           "sucursal": "Plaza Virtual",
           "aforoMax": 100,
           "Staff": 12,
-          "niño": 14,
+          "niño": 4,
           "adulto": 80,
           "grafica": {
             "x": "11 am",
@@ -54,7 +54,7 @@ export default [
           "sucursal": "Plaza Virtual",
           "aforoMax": 100,
           "Staff": 12,
-          "niño": 55,
+          "niño": 5,
           "adulto": 30,
           "grafica": {
             "x": "12 am",
