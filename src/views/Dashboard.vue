@@ -55,7 +55,7 @@
                     </base-input>
                   </div>
                   <div class="col">
-                    <base-input label="Fecha Fin:">
+                    <base-input label="Fecha Final:">
                       <flat-picker
                         placeholder="dd / mm / aaaa"
                         :config="configEndDate"
@@ -67,13 +67,13 @@
                   </div>
                   <div
                     class="col"
-                    style="margin-left: auto; margin-right: auto; margin-bottom: auto; margin-top: auto;"
+                    style="margin: auto;margin-bottom: 5px;margin-top: 25px;"
                   >
                     <button
                       type="submit"
                       size="sm"
                       class="login-button"
-                      style="min-width: 0.5px; height: 20px; font-size: 0.875rem !important; font-weight: 500"
+                      style="min-width: 20px; height: 40px; margin:auto;"
                     >
                       Buscar
                     </button>
@@ -139,7 +139,7 @@
                     "
                     link-classes="py-0 px-2"
                   >
-                    <span class="d-none d-md-block">Personaliza</span>
+                    <span class="d-none d-md-block">Personalizar</span>
                     <span class="d-md-none">P</span>
                   </b-nav-item>
                 </b-nav>
