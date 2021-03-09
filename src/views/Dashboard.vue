@@ -181,10 +181,17 @@
             <h3 class="h3" style="text-align: center;">Visitantes</h3>
             <br />
             <dona-chart
-              :height="280"
+              :height="300"
               :chart-data="chartDonaData"
               :options="optionsPieData"
             />
+          </div>
+        </div>
+        <br/>
+        <div class="row justify-content-start">
+          <div class="col">
+            <h3 class="h3" style="text-align: center;">Mapa de Calor</h3>
+            <img src="img/svg/MapadeCalorProp1.svg"/>
           </div>
         </div>
       </div>
