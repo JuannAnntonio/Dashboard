@@ -46,12 +46,12 @@
 
       <div class="container">
         <div class="row justify-content-start">
-          <div class="col-xl-7 col-md-10 col-sm-10">
+          <div class="col-xl-7 col-md-12 col-sm-12">
             <div class="row justify-content-start">
               <div class="col-auto">
                 <div class="row" v-if="optionDate">
                   <div class="col">
-                    <base-input label="Fecha Inicio:">
+                    <base-input label="Inicio:">
                       <flat-picker
                         placeholder="dd / mm / aaaa"
                         class="form-control datepicker"
@@ -62,7 +62,7 @@
                     </base-input>
                   </div>
                   <div class="col">
-                    <base-input label="Fecha Final:">
+                    <base-input label="Final:">
                       <flat-picker
                         placeholder="dd / mm / aaaa"
                         :config="configEndDate"
@@ -72,25 +72,26 @@
                       </flat-picker>
                     </base-input>
                   </div>
-                  <div
-                    class="col"
-                    style="margin: auto;margin-bottom: 5px;margin-top: 25px;"
-                  >
-                    <button
-                      type="submit"
-                      size="sm"
-                      class="login-button"
-                      style="min-width: 20px; height: 40px; margin:auto;"
-                    >
-                      Buscar
-                    </button>
+                  <div class="col">
+                    <div tabindex="-1" role="group" class="bv-no-focus-ring">
+                      <label class="form-control-label"><br /></label>
+                      <div class="has-label">
+                        <button
+                          type="submit"
+                          class="login-button"
+                          style="min-width: 15px; height: 40px;"
+                        >
+                          Buscar
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div class="row justify-content-start">
               <div class="col-auto">
-                <h5 class="h3  mb-0">Aforo</h5>
+                <h5 class="h3 text-primary mb-0">{{tituloGrafica }}</h5>
               </div>
               <div class="col">
                 <b-nav class="nav-pills justify-content-end">
@@ -177,8 +178,8 @@
               </div>
             </div>
           </div>
-          <div class="col-xl-5 col-md-7 col-sm-10">
-            <h3 class="h3" style="text-align: center;">Visitantes</h3>
+          <div class="col-xl-5 col-md-12 col-sm-12">
+            <h5 class="h3 text-primary mb-0" style="text-align: center;">Visitantes</h5>
             <br />
             <dona-chart
               :height="300"
@@ -187,11 +188,11 @@
             />
           </div>
         </div>
-        <br/>
+        <br />
         <div class="row justify-content-start">
           <div class="col">
-            <h3 class="h3" style="text-align: center;">Mapa de Calor</h3>
-            <img src="img/svg/MapadeCalorProp1.svg"/>
+            <h5 class="h3 text-primary mb-0" style="text-align: center;">Mapa de calor</h5>
+            <img src="img/svg/MapadeCalorProp1.svg" />
           </div>
         </div>
       </div>
@@ -217,6 +218,7 @@ export default {
     return {
       optionDate: false,
       datos,
+      tituloGrafica:'',
       labelX: [],
       labelY: [],
       bigLineChart: {
@@ -296,10 +298,28 @@ export default {
   },
   methods: {
     initBigChart(index) {
+
+      if(index==0){
+        this.tituloGrafica = "Resumen actual"
+      }
+      else if(index==1){
+        this.tituloGrafica = "Resumen semanal"
+      }
+      else if(index==2){
+        this.tituloGrafica = "Resumen mensual"
+      }
+      else if(index==3){
+        this.tituloGrafica = "Resumen anual"
+      }
+      else if(index==4){
+        this.tituloGrafica = "Resumen del día"
+      }
+
+
       var labelX = [];
       var labelY = [];
       this.bigLineChart.chartData = {};
-      
+
       //console.log(this.datos[index].aforo);
       var niños = 0;
       var adultos = 0;
@@ -321,19 +341,19 @@ export default {
       this.sucursal.aforoActual = Math.trunc((niños + adultos) / 5);
       this.labelX = labelX;
       this.labelY = labelY;
-      
-      var donaData={
+
+      var donaData = {
         labels: ["Adultos", "Niños"],
         datasets: [
           {
             data: [adultos, niños],
             backgroundColor: ["#5e72e4", "#9ba8f49c "],
             borderColor: "black",
-            hoverBorderColor: 'black',
+            hoverBorderColor: "black",
             hoverBackgroundColor: ["#5e72e4", "#9ba8f49c "],
           },
         ],
-      }; 
+      };
 
       this.chartDonaData = donaData;
       //console.log(this.labelX);
