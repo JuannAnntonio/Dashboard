@@ -80,6 +80,7 @@
                           type="submit"
                           class="login-button"
                           style="min-width: 15px; height: 40px;"
+                          @click="rango();"
                         >
                           Buscar
                         </button>
@@ -99,7 +100,7 @@
                     :active="bigLineChart.activeIndex === 0"
                     @click="
                       optionDate = false;
-                      initBigChart(0);
+                      calculateForDay();
                     "
                     link-classes="py-0 px-2"
                   >
@@ -110,7 +111,7 @@
                     :active="bigLineChart.activeIndex === 1"
                     @click="
                       optionDate = false;
-                      initBigChart(1);
+                      calculateForWeek();
                     "
                     link-classes="py-0 px-2"
                   >
@@ -120,7 +121,7 @@
                   <b-nav-item
                     @click="
                       optionDate = false;
-                      initBigChart(2);
+                      calculateForMonth();
                     "
                     :active="bigLineChart.activeIndex === 2"
                     link-classes="py-0 px-2"
@@ -132,7 +133,7 @@
                     :active="bigLineChart.activeIndex === 3"
                     @click="
                       optionDate = false;
-                      initBigChart(3);
+                      calculateForYear();
                     "
                     link-classes="py-0 px-2"
                   >
@@ -297,24 +298,41 @@ export default {
     };
   },
   methods: {
+    rango(){
+
+      let ini = new Date(this.startDate);
+      let end = new Date(this.endDate);
+
+      let diferenciaDias = end.getTime() - ini.getTime()
+      console.log(Math.round(diferenciaDias/ (1000*60*60*24)))
+
+      if(diferenciaDias==0){
+        this.calculateForDay();
+      } else if(diferenciaDias<=7){
+        this.calculateForWeek();
+      } else if(diferenciaDias>=32){
+        this.calculateForMonth();
+      } else if(diferenciaDias>=366){
+        this.calculateForYear();
+      }
+    },
+    calculateForDay(){
+      this.tituloGrafica = "Resumen actual"
+      this.initBigChart(0);  
+    },
+    calculateForWeek(){
+      this.tituloGrafica = "Resumen semanal"
+      this.initBigChart(1);  
+    },
+    calculateForMonth(){
+      this.tituloGrafica = "Resumen mensual"
+      this.initBigChart(2);  
+    },
+    calculateForYear(){
+      this.tituloGrafica = "Resumen anual"
+      this.initBigChart(3);  
+    },
     initBigChart(index) {
-
-      if(index==0){
-        this.tituloGrafica = "Resumen actual"
-      }
-      else if(index==1){
-        this.tituloGrafica = "Resumen semanal"
-      }
-      else if(index==2){
-        this.tituloGrafica = "Resumen mensual"
-      }
-      else if(index==3){
-        this.tituloGrafica = "Resumen anual"
-      }
-      else if(index==4){
-        this.tituloGrafica = "Resumen del día"
-      }
-
 
       var labelX = [];
       var labelY = [];
