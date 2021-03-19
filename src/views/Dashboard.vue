@@ -6,13 +6,14 @@
           <stats-card title="Sucursal">
             <h5 class="card-title text-uppercase text-muted mb-0">Sucursal</h5>
             <div class="wrap-input mb-3 mt-3">
-              <select class="input" id="sucursal" v-model="sucursal">
-                <option
-                    v-bind:key="sucursal.id"
-                    v-for="sucursal in sucursales"
-                    :value="sucursal">
+              <select class="input">
+                <option v-for="(sucursal, index) in sucursales"
+                    v-bind:value="sucursal.id"
+                    v-bind:selected="index === 0"
+                    v-bind:key="sucursal.id">
                   {{ sucursal.nombre }}
                 </option>
+
               </select>
             </div>
             <template slot="footer">
@@ -257,8 +258,8 @@ export default {
         adultos: 0,
       },
       sucursales: [
-        {id: 1, nombre: "Plaza Virtual"},
-        {id: 2, nombre: "Plaza Madero"},
+        {id: 0, nombre: "Plaza Virtual"},
+        {id: 1, nombre: "Plaza Madero"},
       ],
       dataPastel: [],
       optionsPieData: {
@@ -287,7 +288,7 @@ export default {
       },
 
       porcentajeAforo: "0",
-      startDate: "2021-03-01",
+      startDate: "",
       endDate: "",
       maxDate: "",
       configEndDate: {
@@ -347,14 +348,29 @@ export default {
 
       const self = this;
 
+      
+      var dateCompare;
+      var anio;
+      if(this.startDate && this.startDate!=""){
+        dateCompare = new Date(self.startDate);
+        anio = (""+dateCompare.getUTCFullYear()).slice(1);
+      }else{
+        dateCompare = new Date();
+        anio = (""+dateCompare.getUTCFullYear());
+      }
+      var dia = dateCompare.getDate();
+      if(dia<10){
+        dia = "0"+dia;
+      }
+      dateCompare = anio+"-0"+(dateCompare.getMonth()+1)+"-"+dia;
+      console.log("JUAN",dateCompare);
       if (index === 4) {
         this.datos[index].aforo.forEach(function (element) {
           const date = element.fecha.substring(0, 4) + "-" + element.fecha.substring(4, 6) + "-" + element.fecha.substring(6);
-
-          if (date === self.startDate) {
+          if (date === dateCompare) {
             labelX.push(element.x);
             labelY.push(parseInt(element.y));
-            aforoMax += parseInt(element.aforoMax);
+            aforoMax = parseInt(element.aforoMax);
             sucursal = element.sucursal;
             ninios += parseInt(element.niño);
             adultos += parseInt(element.adulto);
@@ -389,11 +405,11 @@ export default {
         });
       }
 
-      this.sucursal.nombre = sucursal;
+      this.sucursal = {id: 1, nombre: "Plaza Virtual"};
       this.sucursal.ninios = ninios;
       this.sucursal.adultos = adultos;
       this.sucursal.aforoMax = aforoMax;
-      this.sucursal.aforoActual = Math.trunc((ninios + adultos) / 5);
+      this.sucursal.aforoActual = Math.trunc((ninios + adultos) / labelX.length);
       this.labelX = labelX;
       this.labelY = labelY;
 
@@ -428,8 +444,14 @@ export default {
     calculaPorcentajeAforo() {
       //console.log(this.sucursal.aforoActual);
       //console.log(this.sucursal.aforoMax);
-      this.porcentajeAforo =
-          (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100;
+      var porcentaje = Math.trunc(
+          (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100);
+      if(porcentaje>100){
+        this.porcentajeAforo =100;
+      }else{
+        this.porcentajeAforo =porcentaje
+      }
+      
       //console.log(this.porcentajeAforo);
     },
   },
