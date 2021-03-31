@@ -335,6 +335,11 @@ export default {
       return new Date(date.setDate(lastDay));
     },
     call(type, startDate, endDate) {
+      this.branch.percentageOfCapacity = 0;
+      this.branch.currentCapacity = 0;
+      this.branch.maxCapacity = 0;
+      this.branch.children=0;
+      this.branch.adults =0;
       axios.get(`https://connectedmetrics.live/back/datos.php?v007=${type}&v001=${startDate}&v002=${endDate}`)
           .then(response => {
             let index = 0;
@@ -342,9 +347,6 @@ export default {
             let coordinateY = [];
 
             if (response.data.length === 0) {
-              this.branch.percentageOfCapacity = 0;
-              this.branch.currentCapacity = 0;
-              this.branch.maxCapacity = 0;
               this.donutChartData = {
                 labels: [],
                 datasets: [],
@@ -362,7 +364,7 @@ export default {
               };
               return;
             }
-
+            
             response.data.forEach((element) => {
               index++;
               this.branch.name = element.customer;
@@ -408,6 +410,7 @@ export default {
             this.lineChartData = chartData;
             this.branch.currentCapacity = Math.trunc((this.branch.children + this.branch.adults) / response.data.length);
             this.branch.percentageOfCapacity = parseFloat(((this.branch.currentCapacity / this.branch.maxCapacity) * 100).toFixed(2));
+            this.branch.percentageOfCapacity = this.branch.percentageOfCapacity>100?100:this.branch.percentageOfCapacity;
           });
     },
     formatDate(date) {
