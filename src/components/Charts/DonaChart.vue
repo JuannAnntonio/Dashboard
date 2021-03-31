@@ -15,10 +15,10 @@ export default {
   mounted () {
     //this.renderChart(this.chartData, this.options);
     this.$watch(
-      'chartDonaData',
+      'chartData',
       (newVal, oldVal) => {
-         console.log('### NEWVAL: '+newVal);
-        if (!oldVal) {
+         console.log('cojones dona', this.chartData, this.options);
+         if (!oldVal) {
           this.renderChart(this.chartData, this.options);
         }
       },

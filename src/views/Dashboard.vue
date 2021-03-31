@@ -17,11 +17,11 @@
               </select>
             </div>
             <template slot="footer">
-              Aforo máx:
-              <span class="text-primary">{{ branch.maxCapacity }}</span>
+              <span class="text-primary pr-2">Aforo máx:</span>
+              <span class="text-primary font-weight-bold">{{ branch.maxCapacity }}</span>
               <br/>
-              Aforo:
-              <span class="text-primary">{{ branch.currentCapacity }}</span>
+              <span class="text-primary pr-2">Aforo:</span>
+              <span class="text-primary font-weight-bold">{{ branch.currentCapacity }}</span>
             </template>
           </stats-card>
         </div>
@@ -227,9 +227,9 @@ export default {
         datasets: [
           {
             data: [0, 0],
-            backgroundColor: ["#5e72e4", "#9ba8f49c"],
+            backgroundColor: ["#33339B", "#9ba8f49c"],
             borderColor: "black",
-            hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
+            hoverBackgroundColor: ["#33339B", "#9ba8f49c"],
             hoverBorderColor: "red",
           },
         ],
@@ -342,6 +342,7 @@ export default {
             let coordinateY = [];
 
             if (response.data.length === 0) {
+              console.log("no mames entré");
               this.branch.percentageOfCapacity = 0;
               this.branch.currentCapacity = 0;
               this.branch.maxCapacity = 0;
@@ -349,17 +350,20 @@ export default {
                 labels: [],
                 datasets: [],
               };
-              this.lineChartData =  {
+
+              this.lineChartData = {
                 datasets: [
                   {
                     data: [],
-                    backgroundColor: ["#5e72e4", "#9ba8f49c"],
+                    backgroundColor: ["#33339B", "#9ba8f49c"],
                     borderColor: "black",
                     hoverBorderColor: "black",
-                    hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
+                    hoverBackgroundColor: ["#33339B", "#9ba8f49c"],
                   }
                 ],
+                labels: coordinateX,
               };
+
               return;
             }
 
@@ -380,22 +384,20 @@ export default {
               }
             });
 
-            const donutData = {
+            this.donutChartData = {
               labels: ["Adultos", "Niños"],
               datasets: [
                 {
                   data: [this.branch.adults, this.branch.children],
-                  backgroundColor: ["#5e72e4", "#9ba8f49c"],
+                  backgroundColor: ["#33339B", "#9ba8f49c"],
                   borderColor: "black",
                   hoverBorderColor: "black",
-                  hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
+                  hoverBackgroundColor: ["#33339B", "#9ba8f49c"],
                 },
               ],
             };
 
-            this.donutChartData = donutData;
-
-            const chartData = {
+            this.lineChartData = {
               datasets: [
                 {
                   label: "Aforo",
@@ -404,10 +406,10 @@ export default {
               ],
               labels: coordinateX,
             };
-
-            this.lineChartData = chartData;
             this.branch.currentCapacity = Math.trunc((this.branch.children + this.branch.adults) / response.data.length);
             this.branch.percentageOfCapacity = parseFloat(((this.branch.currentCapacity / this.branch.maxCapacity) * 100).toFixed(2));
+            console.log(this.branch.children);
+            console.log(this.branch.adults);
           });
     },
     formatDate(date) {
