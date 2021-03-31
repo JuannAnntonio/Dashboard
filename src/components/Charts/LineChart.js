@@ -19,6 +19,7 @@ export default {
     this.$watch(
       'chartData',
       (newVal, oldVal) => {
+        console.log('cojones line', this.chartData, this.extraOptions);
         if (!oldVal) {
           this.renderChart(this.chartData, this.extraOptions);
         }
