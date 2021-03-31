@@ -1,16 +1,16 @@
 
 export default [
   {
-    id: 1544,
+    id: 5543,
     macDispositivo: '34:45:F3:C0',
-    sucursal: 'MINISO MADERO',
-    ubicacion: 'SALIDA SUR',
+    sucursal: 'Suc San Andres',
+    ubicacion: 'Cajas',
     registro: '2020-08-25 17:50:30',
     status: {
       statusType: 'success',
       descripcion: 'EN LINEA HACE 5 MIN'
     }
-  },
+  },/*
   {
     id: 5437,
     macDispositivo: '04:45:F3:C2',
@@ -65,5 +65,5 @@ export default [
       statusType: 'danger',
       descripcion: 'EN LINEA HACE 12 HRS'
     }
-  },
+  },*/
 ]
