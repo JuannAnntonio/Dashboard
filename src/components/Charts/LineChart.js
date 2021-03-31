@@ -1,5 +1,6 @@
 import { Line, mixins } from 'vue-chartjs';
 import globalOptionsMixin from "@/components/Charts/globalOptionsMixin";
+
 export default {
   name: 'line-chart',
   extends: Line,
@@ -19,7 +20,7 @@ export default {
     this.$watch(
       'chartData',
       (newVal, oldVal) => {
-        console.log('cojones line', this.chartData, this.extraOptions);
+        console.log("line " + !oldVal);
         if (!oldVal) {
           this.renderChart(this.chartData, this.extraOptions);
         }

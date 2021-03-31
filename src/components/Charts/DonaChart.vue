@@ -6,19 +6,23 @@ export default {
   name: 'dona-chart',
   extends: Doughnut,
   mixins: [mixins.reactiveProp, globalOptionsMixin],
-  props:['chartDonaData','options'],
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     return {
       ctx: null
     };
   },
-  mounted () {
-    //this.renderChart(this.chartData, this.options);
+  mounted() {
     this.$watch(
       'chartData',
       (newVal, oldVal) => {
-         console.log('cojones dona', this.chartData, this.options);
-         if (!oldVal) {
+        console.log("donut " + !oldVal);
+        if (!oldVal) {
           this.renderChart(this.chartData, this.options);
         }
       },
