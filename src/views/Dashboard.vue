@@ -307,7 +307,7 @@ export default {
       this.call(4, startDate, endDate);
     },
     freeSelection() {
-      this.graphicTitle = `Fecha del ${this.startDate.getDate()} al ${this.endDate.getDate()}`;
+      this.graphicTitle = `Fecha del ${this.startDate} al ${this.endDate}`;
       this.isFreeSelection = true;
       this.rangeSelection = PERIODS.FREE_SELECTION;
       let initDate = new Date(this.startDate);
@@ -315,15 +315,15 @@ export default {
       let daysDifference = endDate.getTime() - initDate.getTime()
 
       if (daysDifference === 0) {
-        this.call(1, this.formatDate(this.startDate), this.formatDate(this.endDate));
+        this.call(1, this.formatDate(initDate), this.formatDate(endDate));
       } else if (daysDifference <= 7) {
-        this.call(2, this.formatDate(this.startDate), this.formatDate(this.endDate));
+        this.call(2, this.formatDate(initDate), this.formatDate(endDate));
       } else if (daysDifference >= 32) {
-        this.call(3, this.formatDate(this.startDate), this.formatDate(this.endDate));
+        this.call(3, this.formatDate(initDate), this.formatDate(endDate));
       } else if (daysDifference >= 366) {
-        this.call(4, this.formatDate(this.startDate), this.formatDate(this.endDate));
+        this.call(4, this.formatDate(initDate), this.formatDate(endDate));
       } else {
-        this.call(5, this.formatDate(this.startDate), this.formatDate(this.endDate));
+        this.call(5, this.formatDate(initDate), this.formatDate(endDate));
       }
     },
     startOfWeek(date) {
@@ -338,8 +338,9 @@ export default {
       this.branch.percentageOfCapacity = 0;
       this.branch.currentCapacity = 0;
       this.branch.maxCapacity = 0;
-      this.branch.children=0;
-      this.branch.adults =0;
+      this.branch.children= 0;
+      this.branch.adults = 0;
+
       axios.get(`https://connectedmetrics.live/back/datos.php?v007=${type}&v001=${startDate}&v002=${endDate}`)
           .then(response => {
             let index = 0;
@@ -347,13 +348,13 @@ export default {
             let coordinateY = [];
 
             if (response.data.length === 0) {
-              console.log("no mames entré");
               this.branch.percentageOfCapacity = 0;
               this.branch.currentCapacity = 0;
               this.branch.maxCapacity = 0;
               this.donutChartData = {
                 labels: [],
                 datasets: [],
+                options: []
               };
 
               this.lineChartData = {
@@ -390,7 +391,6 @@ export default {
             });
 
             this.donutChartData = {
-              labels: ["Adultos", "Niños"],
               datasets: [
                 {
                   data: [this.branch.adults, this.branch.children],
@@ -400,6 +400,7 @@ export default {
                   hoverBackgroundColor: ["#33339B", "#9ba8f49c"],
                 },
               ],
+              labels: ["Adultos", "Niños"],
             };
 
             this.lineChartData = {
