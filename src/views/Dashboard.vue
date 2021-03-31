@@ -7,21 +7,21 @@
             <h5 class="card-title text-uppercase text-muted mb-0">Sucursal</h5>
             <div class="wrap-input mb-3 mt-3">
               <select class="input">
-                <option v-for="(sucursal, index) in sucursales"
-                    v-bind:value="sucursal.id"
-                    v-bind:selected="index === 0"
-                    v-bind:key="sucursal.id">
-                  {{ sucursal.nombre }}
+                <option v-for="(branch, index) in branchOffices"
+                        v-bind:value="branch.id"
+                        v-bind:selected="index === 0"
+                        v-bind:key="branch.id">
+                  {{ branch.name }}
                 </option>
 
               </select>
             </div>
             <template slot="footer">
               Aforo máx:
-              <span class="text-primary">{{ sucursal.aforoMax }}</span>
+              <span class="text-primary">{{ branch.maxCapacity }}</span>
               <br/>
               Aforo:
-              <span class="text-primary">{{ sucursal.aforoActual }}</span>
+              <span class="text-primary">{{ branch.currentCapacity }}</span>
             </template>
           </stats-card>
         </div>
@@ -29,34 +29,32 @@
           <stats-card
               title="Aforo actual"
               type="gradient-primary"
-              :sub-title="porcentajeAforo + '%'"
+              :sub-title="this.branch.percentageOfCapacity + '%'"
               icon="ni ni-chart-bar-32"
-              class="mb-2"
-          >
+              class="mb-2">
             <template slot="footer">
               <br/>
               <base-progress
                   type="primary"
                   :height="8"
-                  :value="porcentajeAforo"
+                  :value="this.branch.percentageOfCapacity"
               />
             </template>
           </stats-card>
         </div>
       </div>
-
       <div class="container">
         <div class="row justify-content-start">
           <div class="col-xl-7 col-md-12 col-sm-12">
             <div class="row justify-content-start">
               <div class="col-auto">
-                <div class="row" v-if="optionDate">
+                <div class="row" v-if="this.isFreeSelection">
                   <div class="col">
                     <base-input label="Inicio:">
                       <flat-picker
                           placeholder="dd / mm / aaaa"
                           class="form-control datepicker"
-                          :config="configEndDate"
+                          :config="configDate"
                           v-model="startDate"
                       >
                       </flat-picker>
@@ -66,7 +64,7 @@
                     <base-input label="Final:">
                       <flat-picker
                           placeholder="dd / mm / aaaa"
-                          :config="configEndDate"
+                          :config="configDate"
                           class="form-control datepicker"
                           v-model="endDate"
                       >
@@ -76,14 +74,20 @@
                   <div class="col">
                     <div tabindex="-1" role="group" class="bv-no-focus-ring">
                       <label class="form-control-label"><br/></label>
-                      <div class="has-label">
+                      <div class="has-label d-flex">
                         <button
                             type="submit"
-                            class="login-button"
+                            class="login-button mr-4"
                             style="min-width: 15px; height: 40px;"
-                            @click="range();"
-                        >
+                            @click="freeSelection()">
                           Buscar
+                        </button>
+                        <button
+                            type="button"
+                            class="cancel-button"
+                            style="min-width: 15px; height: 40px;"
+                            @click="closeFreeSelection()">
+                          Cancelar
                         </button>
                       </div>
                     </div>
@@ -91,79 +95,55 @@
                 </div>
               </div>
             </div>
-            <div class="row justify-content-start">
+            <div class="row justify-content-start" v-if="!this.isFreeSelection">
               <div class="col-auto">
-                <h5 class="h3 text-primary mb-0">{{ tituloGrafica }}</h5>
+                <h5 class="h3 text-primary mb-0">{{ graphicTitle }}</h5>
               </div>
               <div class="col">
                 <b-nav class="nav-pills justify-content-end">
                   <b-nav-item
-                      :active="bigLineChart.activeIndex === 0"
-                      @click="
-                      optionDate = false;
-                      calculateForDay();
-                    "
-                      link-classes="py-0 px-2"
-                  >
+                      :active="rangeSelection === 'day'"
+                      @click="calculateForDay()"
+                      link-classes="py-0 px-2">
                     <span class="d-none d-md-block">Día</span>
                     <span class="d-md-none">D</span>
                   </b-nav-item>
                   <b-nav-item
-                      :active="bigLineChart.activeIndex === 1"
-                      @click="
-                      optionDate = false;
-                      calculateForWeek();
-                    "
-                      link-classes="py-0 px-2"
-                  >
+                      :active="rangeSelection === 'week'"
+                      @click="calculateForWeek()"
+                      link-classes="py-0 px-2">
                     <span class="d-none d-md-block">Semana</span>
                     <span class="d-md-none">S</span>
                   </b-nav-item>
                   <b-nav-item
-                      @click="
-                      optionDate = false;
-                      calculateForMonth();
-                    "
-                      :active="bigLineChart.activeIndex === 2"
-                      link-classes="py-0 px-2"
-                  >
+                      @click="calculateForMonth()"
+                      :active="rangeSelection === 'month'"
+                      link-classes="py-0 px-2">
                     <span class="d-none d-md-block">Mes</span>
                     <span class="d-md-none">M</span>
                   </b-nav-item>
                   <b-nav-item
-                      :active="bigLineChart.activeIndex === 3"
-                      @click="
-                      optionDate = false;
-                      calculateForYear();
-                    "
-                      link-classes="py-0 px-2"
-                  >
+                      :active="rangeSelection === 'year'"
+                      @click="calculateForYear()"
+                      link-classes="py-0 px-2">
                     <span class="d-none d-md-block">Año</span>
                     <span class="d-md-none">A</span>
                   </b-nav-item>
                   <b-nav-item
-                      :active="bigLineChart.activeIndex === 4"
-                      @click="
-                      optionDate = true;
-                      bigLineChart.activeIndex = 4;
-                    "
-                      link-classes="py-0 px-2"
-                  >
+                      :active="rangeSelection === 'free'"
+                      @click="freeSelection()"
+                      link-classes="py-0 px-2">
                     <span class="d-none d-md-block">
                       <el-tooltip
                           placement="bottom"
-                          content="Fecha Personalizada"
-                      >
+                          content="Fecha Personalizada">
                         <i class="ni ni-calendar-grid-58"/>
                       </el-tooltip>
                     </span>
-                    <span class="d-md-none"
-                    ><el-tooltip
+                    <span class="d-md-none"><el-tooltip
                         placement="bottom"
-                        content="Fecha Personalizada"
-                    >
-                        <i class="ni ni-calendar-grid-58"/> </el-tooltip
-                    ></span>
+                        content="Fecha Personalizada">
+                        <i class="ni ni-calendar-grid-58"/> </el-tooltip></span>
                   </b-nav-item>
                 </b-nav>
               </div>
@@ -173,9 +153,7 @@
               <div class="col">
                 <line-chart
                     :height="350"
-                    :chart-data="bigLineChart.chartData"
-                    :extra-options="bigLineChart.extraOptions"
-                >
+                    :chart-data="lineChartData">
                 </line-chart>
               </div>
             </div>
@@ -185,8 +163,8 @@
             <br/>
             <dona-chart
                 :height="300"
-                :chart-data="chartDonaData"
-                :options="optionsPieData"
+                :chart-data="donutChartData"
+                :options="donutChartData.options"
             />
           </div>
         </div>
@@ -205,258 +183,240 @@
 import flatPicker from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import LineChart from "@/components/Charts/LineChart";
-import BaseProgress from "@/components/BaseProgress";
 import DonaChart from "@/components/Charts/DonaChart";
-import datos from "./Pages/dataDashboard";
+import axios from "axios";
+
+const PERIODS = {
+  BY_DAY: "day",
+  BY_WEEK: "week",
+  BY_MONTH: "month",
+  BY_YEAR: "year",
+  FREE_SELECTION: "free",
+};
 
 export default {
-  components: {
-    LineChart,
-    BaseProgress,
-    flatPicker,
-    DonaChart,
-  },
   data() {
     return {
-      optionDate: false,
-      datos,
-      tituloGrafica: '',
-      labelX: [],
-      labelY: [],
-      bigLineChart: {
-        activeIndex: 0,
-        chartData: {
-          datasets: [
-            {
-              label: "Aforo",
-              data: this.labelY,
-            },
-          ],
-          labels: this.labelX,
-        },
-        extraOptions: {
-          /*elements: {
-            point: {
-              radius: 3,
-              backgroundColor: "red",
-            },
-            line: {
-              tension: 0.4,
-              borderWidth: 2,
-              borderColor: "red",
-              backgroundColor: "transparent",
-              borderCapStyle: "rounded",
-            },
-          }*/
-        },
+      isFreeSelection: false,
+      branch: {
+        id: 0,
+        name: "",
+        maxCapacity: 0,
+        currentCapacity: 0,
+        children: 0,
+        adults: 0,
+        percentageOfCapacity: 0,
       },
-      sucursal: {
-        nombre: "Plaza Virtual",
-        aforoMax: 0,
-        aforoActual: 0,
-        ninios: 0,
-        adultos: 0,
-      },
-      sucursales: [
-        {id: 0, nombre: "Plaza Virtual"},
-        {id: 1, nombre: "Plaza Madero"},
-      ],
-      dataPastel: [],
-      optionsPieData: {
-        cutoutPercentage: 50,
-        legend: {
-          display: true,
-          position: "bottom",
-          labels: {
-            fontColor: "black",
-            padding: 50,
-            boxWidth: 80,
+      rangeSelection: PERIODS.BY_MONTH,
+      branchOffices: [],
+      currentDate: new Date(),
+      startDate: new Date(),
+      endDate: new Date(),
+      graphicTitle: "",
+      lineChartData: {
+        datasets: [
+          {
+            label: "",
+            dataY: [],
           },
-        },
+        ],
+        labelsX: [],
       },
-      chartDonaData: {
+      donutChartData: {
         labels: ["Adultos", "Niños"],
         datasets: [
           {
             data: [0, 0],
-            backgroundColor: ["#5e72e4", "#9ba8f49c "],
+            backgroundColor: ["#5e72e4", "#9ba8f49c"],
             borderColor: "black",
-            hoverBackgroundColor: ["#5e72e4", "#9ba8f49c "],
+            hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
             hoverBorderColor: "red",
           },
         ],
+        options: {
+          cutoutPercentage: 50,
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+              fontColor: "black",
+              padding: 50,
+              boxWidth: 80,
+            },
+          },
+        }
       },
-
-      porcentajeAforo: "0",
-      startDate: "",
-      endDate: "",
-      maxDate: "",
-      configEndDate: {
+      configDate: {
         maxDate: new Date(),
         dateFormat: "d-M-Y",
         altInput: true,
       },
-    };
+    }
+  },
+  components: {
+    LineChart,
+    flatPicker,
+    DonaChart,
+  },
+  mounted() {
+    this.rangeSelection = PERIODS.BY_DAY;
+    this.call(1, this.formatDate(this.startDate), this.formatDate(this.endDate));
   },
   methods: {
-    range() {
-      let initDate = new Date(this.startDate);
-      let endDate = new Date(this.endDate);
-
-      let diferenciaDias = endDate.getTime() - initDate.getTime()
-      console.log(Math.round(diferenciaDias / (1000 * 60 * 60 * 24)))
-
-      if (diferenciaDias == 0) {
-        this.calculateForDay();
-      } else if (diferenciaDias <= 7) {
-        this.calculateForWeek();
-      } else if (diferenciaDias >= 32) {
-        this.calculateForMonth();
-      } else if (diferenciaDias >= 366) {
-        this.calculateForYear();
-      }
-    },
     calculateForDay() {
-      this.bigLineChart.activeIndex = 0;
-      this.tituloGrafica = "Resumen actual"
-      this.initBigChart(4);
+      this.graphicTitle = "Resumen de hoy";
+      this.isFreeSelection = false;
+      this.rangeSelection = PERIODS.BY_DAY;
+      let formattedDate = this.formatDate(this.currentDate);
+      this.call(1, formattedDate, formattedDate);
     },
     calculateForWeek() {
-      this.bigLineChart.activeIndex = 1;
-      this.tituloGrafica = "Resumen semanal"
-      this.initBigChart(1);
+      this.graphicTitle = "Resumen semanal";
+      this.isFreeSelection = false;
+      this.rangeSelection = PERIODS.BY_WEEK;
+      let month = this.currentDate.getMonth();
+      let year = this.currentDate.getFullYear()
+      let firstDayOfWeekend = this.startOfWeek(new Date()).getDate();
+      let lastDayOfWeekend = this.endOfWeek(new Date()).getDate();
+      let monthOfWeek = this.endOfWeek(new Date()).getMonth();
+      let startDate = this.formatDate(new Date(year, month, firstDayOfWeekend));
+      let endDate = this.formatDate(new Date(year, monthOfWeek, lastDayOfWeekend));
+      this.call(2, startDate, endDate);
     },
     calculateForMonth() {
-      this.bigLineChart.activeIndex = 2;
-      this.tituloGrafica = "Resumen mensual"
-      this.initBigChart(5);
+      this.graphicTitle = "Resumen mensual";
+      this.isFreeSelection = false;
+      this.rangeSelection = PERIODS.BY_MONTH;
+      let firstDayOfMonth = 1;
+      let month = this.currentDate.getMonth();
+      let year = this.currentDate.getFullYear()
+      let startDate = this.formatDate(new Date(year, month, firstDayOfMonth));
+      let endDate = this.formatDate(new Date(year, month + 1, 0));
+      this.call(3, startDate, endDate);
     },
     calculateForYear() {
-      this.bigLineChart.activeIndex = 3;
-      this.tituloGrafica = "Resumen anual"
-      this.initBigChart(3);
+      this.graphicTitle = "Resumen anual";
+      this.isFreeSelection = false;
+      this.rangeSelection = PERIODS.BY_YEAR;
+      let lastDayOfYear = 31;
+      let firstMonthOfYear = 1;
+      let lastMonthOfYear = this.currentDate.getMonth();
+      let year = this.currentDate.getFullYear()
+      let startDate = this.formatDate(new Date(year, 0, firstMonthOfYear));
+      let endDate = this.formatDate(new Date(year, lastMonthOfYear, lastDayOfYear));
+      this.call(4, startDate, endDate);
     },
-    initBigChart(index) {
-      const labelX = [];
-      const labelY = [];
-      this.bigLineChart.chartData = {};
+    freeSelection() {
+      this.graphicTitle = `Fecha del ${this.startDate.getDate()} al ${this.endDate.getDate()}`;
+      this.isFreeSelection = true;
+      this.rangeSelection = PERIODS.FREE_SELECTION;
+      let initDate = new Date(this.startDate);
+      let endDate = new Date(this.endDate);
+      let daysDifference = endDate.getTime() - initDate.getTime()
 
-      let ninios = 0;
-      let adultos = 0;
-      let aforoMax = 0;
-      let sucursal = "";
-
-      const self = this;
-
-      
-      var dateCompare;
-      var anio;
-      if(this.startDate && this.startDate!=""){
-        dateCompare = new Date(self.startDate);
-        anio = (""+dateCompare.getUTCFullYear()).slice(1);
-      }else{
-        dateCompare = new Date();
-        anio = (""+dateCompare.getUTCFullYear());
+      if (daysDifference === 0) {
+        this.call(1, this.formatDate(this.startDate), this.formatDate(this.endDate));
+      } else if (daysDifference <= 7) {
+        this.call(2, this.formatDate(this.startDate), this.formatDate(this.endDate));
+      } else if (daysDifference >= 32) {
+        this.call(3, this.formatDate(this.startDate), this.formatDate(this.endDate));
+      } else if (daysDifference >= 366) {
+        this.call(4, this.formatDate(this.startDate), this.formatDate(this.endDate));
+      } else {
+        this.call(5, this.formatDate(this.startDate), this.formatDate(this.endDate));
       }
-      var dia = dateCompare.getDate();
-      if(dia<10){
-        dia = "0"+dia;
-      }
-      dateCompare = anio+"-0"+(dateCompare.getMonth()+1)+"-"+dia;
-      console.log("JUAN",dateCompare);
-      if (index === 4) {
-        this.datos[index].aforo.forEach(function (element) {
-          const date = element.fecha.substring(0, 4) + "-" + element.fecha.substring(4, 6) + "-" + element.fecha.substring(6);
-          if (date === dateCompare) {
-            labelX.push(element.x);
-            labelY.push(parseInt(element.y));
-            aforoMax = parseInt(element.aforoMax);
-            sucursal = element.sucursal;
-            ninios += parseInt(element.niño);
-            adultos += parseInt(element.adulto);
-          }
-        });
-      } else if (index === 5) {
-        this.datos[index].aforo.forEach(function (element) {
-          const month = element.fecha.substring(4, 6);
-
-          if (month === "03") {
-            labelX.push(element.x);
-            labelY.push(parseInt(element.y));
-            aforoMax += parseInt(element.aforoMax);
-            sucursal = element.sucursal;
-            ninios += parseInt(element.niño);
-            adultos += parseInt(element.adulto);
-          }
-        });
-      } else if (index === 1) {
-        this.datos[5].aforo.forEach(function (element) {
-          const day = element.fecha.substring(6);
-          const month = element.fecha.substring(4, 6);
-
-          if (parseInt(day) < 8 && month === "03") {
-            labelX.push(element.x);
-            labelY.push(parseInt(element.y));
-            aforoMax += parseInt(element.aforoMax);
-            sucursal = element.sucursal;
-            ninios += parseInt(element.niño);
-            adultos += parseInt(element.adulto);
-          }
-        });
-      }
-
-      this.sucursal = {id: 1, nombre: "Plaza Virtual"};
-      this.sucursal.ninios = ninios;
-      this.sucursal.adultos = adultos;
-      this.sucursal.aforoMax = aforoMax;
-      this.sucursal.aforoActual = Math.trunc((ninios + adultos) / labelX.length);
-      this.labelX = labelX;
-      this.labelY = labelY;
-
-      var donaData = {
-        labels: ["Adultos", "Niños"],
-        datasets: [
-          {
-            data: [adultos, ninios],
-            backgroundColor: ["#5e72e4", "#9ba8f49c "],
-            borderColor: "black",
-            hoverBorderColor: "black",
-            hoverBackgroundColor: ["#5e72e4", "#9ba8f49c "],
-          },
-        ],
-      };
-
-      this.chartDonaData = donaData;
-      //console.log(this.labelX);
-      var chartData = {
-        datasets: [
-          {
-            label: "Aforo",
-            data: this.labelY,
-          },
-        ],
-        labels: this.labelX,
-      };
-      this.bigLineChart.chartData = chartData;
-
-      this.calculaPorcentajeAforo();
     },
-    calculaPorcentajeAforo() {
-      //console.log(this.sucursal.aforoActual);
-      //console.log(this.sucursal.aforoMax);
-      var porcentaje = Math.trunc(
-          (this.sucursal.aforoActual / this.sucursal.aforoMax) * 100);
-      if(porcentaje>100){
-        this.porcentajeAforo =100;
-      }else{
-        this.porcentajeAforo =porcentaje
-      }
-      
-      //console.log(this.porcentajeAforo);
+    startOfWeek(date) {
+      const diff = date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1);
+      return new Date(date.setDate(diff));
     },
-  },
-  created() {
-    this.calculateForDay();
+    endOfWeek(date) {
+      const lastDay = date.getDate() - (date.getDay() - 1) + 6;
+      return new Date(date.setDate(lastDay));
+    },
+    call(type, startDate, endDate) {
+      axios.get(`https://connectedmetrics.live/back/datos.php?v007=${type}&v001=${startDate}&v002=${endDate}`)
+          .then(response => {
+            let index = 0;
+            let coordinateX = [];
+            let coordinateY = [];
+
+            if (response.data.length === 0) {
+              this.branch.percentageOfCapacity = 0;
+              this.branch.currentCapacity = 0;
+              this.branch.maxCapacity = 0;
+              this.donutChartData = {
+                labels: [],
+                datasets: [],
+              };
+              this.lineChartData =  {
+                datasets: [
+                  {
+                    data: [],
+                    backgroundColor: ["#5e72e4", "#9ba8f49c"],
+                    borderColor: "black",
+                    hoverBorderColor: "black",
+                    hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
+                  }
+                ],
+              };
+              return;
+            }
+
+            response.data.forEach((element) => {
+              index++;
+              this.branch.name = element.customer;
+              this.branch.children += element.kids;
+              this.branch.adults += element.adults;
+              this.branch.maxCapacity += element.maxCapacity;
+              coordinateX.push(element.x);
+              coordinateY.push(element.y);
+
+              if (this.branchOffices.length === 0) {
+                this.branchOffices.push({
+                  id: index,
+                  name: element.branch
+                })
+              }
+            });
+
+            const donutData = {
+              labels: ["Adultos", "Niños"],
+              datasets: [
+                {
+                  data: [this.branch.adults, this.branch.children],
+                  backgroundColor: ["#5e72e4", "#9ba8f49c"],
+                  borderColor: "black",
+                  hoverBorderColor: "black",
+                  hoverBackgroundColor: ["#5e72e4", "#9ba8f49c"],
+                },
+              ],
+            };
+
+            this.donutChartData = donutData;
+
+            const chartData = {
+              datasets: [
+                {
+                  label: "Aforo",
+                  data: coordinateY,
+                },
+              ],
+              labels: coordinateX,
+            };
+
+            this.lineChartData = chartData;
+            this.branch.currentCapacity = Math.trunc((this.branch.children + this.branch.adults) / response.data.length);
+            this.branch.percentageOfCapacity = parseFloat(((this.branch.currentCapacity / this.branch.maxCapacity) * 100).toFixed(2));
+          });
+    },
+    formatDate(date) {
+      return date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2);
+    },
+    closeFreeSelection() {
+      this.isFreeSelection = false;
+      this.rangeSelection = PERIODS.BY_DAY;
+    }
   },
 };
 </script>

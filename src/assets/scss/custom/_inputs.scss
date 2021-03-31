@@ -31,14 +31,11 @@
 | Button styles
 |--------------------------------------------------------------------------
 */
-
+.cancel-button,
 .login-button {
   outline: none !important;
-  border: none !important;
   font-size: 16px !important;
-  color: #fff !important;
   line-height: 1.2 !important;
-
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -49,7 +46,6 @@
   padding: 0 20px;
   min-width: 150px;
   height: 55px;
-  background-color: var(--primary) !important;
   border-radius: 7px;
 
   -webkit-transition: all 0.4s;
@@ -58,12 +54,24 @@
   transition: all 0.4s;
 }
 
-.login-button:hover {
-  color: black !important;
-  border: 2px solid var(--primary) !important;
-  background-color: var(--secondary) !important;
-
+.login-button {
+  color: #fff !important;
+  border: none !important;
+  background-color: $primary !important;
 }
+
+.cancel-button {
+  color: $primary !important;
+  background-color: transparent !important;
+  border: 1px solid $primary;
+}
+
+.cancel-button:hover,
+.login-button:hover {
+  color: white !important;
+  background-color: $primary-dark !important;
+}
+
 
 /*
 |--------------------------------------------------------------------------
